@@ -1,0 +1,104 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Nov 20 22:22:04 2023
+
+@author: Administrator
+"""
+from datetime  import datetime as dt
+milk_expire=dt.strptime("20231123", "%Y%m%d")
+
+class inventory_informa:
+    #单位成本
+    kinds=0
+    store=[["item_name-measurement_unit","quantity","unit cost","unit price","date"],["milk-b",1000,3,6,milk_expire]]
+    def __init__(self,item,quantity,cost,price,expire):
+        self.item=item
+        self.quantity=quantity
+        self.cost=cost
+        self.price=price
+        self.expire=dt.strptime(expire,"%Y%m%d")
+        inventory_informa.store.append([self.item,self.quantity,self.cost,self.price,self.expire])
+        inventory_informa.kinds+=1
+    
+    def update(self,item,quantity,cost):
+        """You update the quantity when selling and purchasing items
+            by negative or positive values of quantity"""
+        for i in inventory_informa.store[1:]:
+            if i[0]==item:
+                if quantity>0 & i[2]!=cost: #这里是进货
+                    i[2]=(quantity*cost+i[1]*i[2])/(quantity+i[1])
+                    i[1]+=quantity
+                    return ("Suggest to adjust the price."+f"{i[0]} remains {i[1]}")
+                else:
+                    i[1]+=quantity
+                    return f"i[0] remains i[1]"
+    def kickback(self):
+        today=dt.today()
+        sale_50=[]
+        sale_80=[]
+        sale={}
+        for i in range(1,len(inventory_informa.store)):
+            due=(today-inventory_informa.store[i][-1]).days
+            if due<3:
+                discount=0.5
+                sale_50.append([inventory_informa.store[i][0],inventory_informa.store[i][3]*discount,due])
+                sale_50=sorted(sale_50,key=lambda x:x[2])
+            elif due<7:
+                discount=0.8
+                sale_80.append([inventory_informa.store[i][0],inventory_informa.store[i][3]*discount,due])
+                sale_80=sorted(sale_80,key=lambda x:x[2])
+        sale["50%"]=sale_50
+        sale["80%"]=sale_80
+        return sale
+    def profit(self):
+        profits=(self.price-self.cost)*self.quantity
+        return profits
+    def __add__(self,other):
+        if self.item==other.item:
+            quantity=self.quantity+other.quantity
+            cost=(self.cost+other.cost)/quantity
+            for i in inventory_informa.store[1:]:
+                if i[0]==other.item:
+                   i[1]=quantity
+                   i[2]=cost
+            return (other.item,quantity,cost)
+        else:
+            print("""There are none matching items. Are you sure you writing the standard name?\n
+                  Call 1 if other are different items;
+                  Call 2 if you want to rewrite""")
+            choice=int(input("Which one do you choose:"))
+            if choice==1:
+                inventory_informa.store.append([other.item,other.quantity,other.cost,other.price,other.expire])
+            elif choice==0:            
+                return "Rewrite the standard style like {self.item}"        
+#你想弄一个加法，每次initialize的时候是不是会重复计算
+class extend_informa(inventory_informa):
+    Kinds=0
+    Store=[["item_name-measurement_unit","quantity","unit cost","unit price","date"]]
+    #滞销商品
+    def __init__(self, item, quantity, cost, price, expire):
+        self.item=item
+        self.quantity=quantity
+        self.cost=cost
+        self.price=price
+        self.expire=dt.strptime(expire,"%Y%m%d")
+        extend_informa.Store.append([self.item,self.quantity,self.cost,self.price])
+        extend_informa.Kinds+=1        
+    def kickback2(self):
+        top3=[]
+        max=10000
+        for i in extend_informa.Store[1:]:
+            
+            if i[1]>max:
+                max=i[1]
+                top3.append([i[0],i[1]])
+        top3.sort(key=lambda x: x[1],reverse=True)
+        return top3[0:3]        
+        #可以调用
+    #直接删掉
+    def remove(self,item):
+        for i in extend_informa.Store[1:]:
+            if i[0]==item:
+                extend_informa.Store.remove(i)
+        
+    
