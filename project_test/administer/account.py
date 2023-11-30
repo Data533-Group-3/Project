@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
+<<<<<<< HEAD
 #change have made ffff
+=======
+#hopefully some change here 
+>>>>>>> administor
 """
 Created on Mon Nov 20 21:28:46 2023
 
