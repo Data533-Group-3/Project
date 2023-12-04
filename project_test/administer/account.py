@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-
 """
 Created on Mon Nov 20 21:28:46 2023
 
 @author: Administrator
 """
-from Administer import inventory
+from administer import inventory
 import customer as c
 from datatime import datatime as dt
 
@@ -22,7 +21,7 @@ class customer():
         if (dt.today()-purchase_day).day>=31:
             points=0
         #当你一个月没有购物，10%,直到为0。
-    def promotion(self):
+    def promotion(self):#账户充钱
         if points>100000:
             price=[]
             for i in inventory_informa.store[1:]:
@@ -36,4 +35,5 @@ class customer():
             for i in inventory_informa.store[1:]:
                 price.append(i[3]*0.95)
 #        i=input("do you want to change something:")
+    def promotion1()
         
