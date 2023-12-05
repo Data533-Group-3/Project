@@ -4,7 +4,8 @@ Created on Mon Nov 20 22:22:04 2023
 
 @author: Administrator
 """
-from datetime  import datetime as dt
+from datetime import datetime as dt
+from datetime import timedelta 
 milk_expire=dt.strptime("20231123", "%Y%m%d")
 
 class inventory_informa:
@@ -35,12 +36,16 @@ class inventory_informa:
     @property
     def profit(self):
         profits=(self.price-self.cost)*self.quantity
-        return profits   
-            
-    def remove(self,item):
+        return profits  
+    
+    def delete(self,item):
         for i in inventory_informa.store[1:]:
             if i[0]==item:
                 inventory_informa.store.remove(i)
+
+
+            
+
 #你想弄一个加法，每次initialize的时候是不是会重复计算
 class extend_informa(inventory_informa):
     Kinds=0
@@ -74,7 +79,7 @@ class extend_informa(inventory_informa):
                 return "Rewrite the standard style like {self.item}"         
  
     def __str__(self):
-        return self.item+"have"+self.quantity+"in store."+"The profit they can make is"+self.profit
+        return f"{self.item} have {self.quantity} in store. The profit they can make is {self.profit}"
  
 def rollback2():
     top3=[]
@@ -105,4 +110,12 @@ def rollback():#放外面
             sale_80=sorted(sale_80,key=lambda x:x[2])
     sale["50%"]=sale_50
     sale["80%"]=sale_80
-    return sale   
+    return sale  
+
+
+
+flower=inventory_informa("flower", 520, 3, 10, (dt.today()+timedelta(days=3)).strftime("%Y%m%d"))
+fish=inventory_informa("fish", 100, 12, 20, (dt.today()+timedelta(days=2)).strftime("%Y%m%d"))
+pork=inventory_informa("pork", 60, 25, 35, (dt.today()+timedelta(days=1)).strftime("%Y%m%d"))
+beef=inventory_informa("beef", 150, 30, 43,( dt.today()+timedelta(days=6)).strftime("%Y%m%d"))
+snack=inventory_informa("snack", 1000, 5, 13, (dt.today()+timedelta(days=20)).strftime("%Y%m%d"))
