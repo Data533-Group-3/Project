@@ -1,13 +1,12 @@
 import sqlite3
 from datetime import datetime
 import uuid
+from distutils.util import execute
 import members
 import transactions
 try:
-    cnx=sqlite3.connect("Supermarket.db")
-    cursor=cnx.cursor()
-    cursor.execute("CREATE TABLE members (id int, name varchar(100), email varchar(100), phone varchar(20), address varchar(200), credits decimal(100,2), deposit decimal(100, 2), total_consumption amount decimal(100, 2), premium membership status bool, primary key (id));")
-    cursor.execute("CREATE TABLE transactions (customer_id int, transaction_id varchar(1000000000000000000), items_name varchar(1000000), items_quantity varchar(100000), items_price varchar(1000000), items_value varchar(100000), transaction_time datetime, primary key(customer_id, transaction_id);)")# order_review varchar(10000000000), order_rate varchar(10000000000),
+    cnx = sqlite3.connect("Supermarket.db")
+    cursor = cnx.cursor()
     sql_query = """SELECT name FROM sqlite_master 
     WHERE type='table';"""
     cursor.execute(sql_query)
@@ -15,115 +14,153 @@ try:
     print(cursor.fetchall())
 except sqlite3.Error as err:
     print(err)
-    
+
+
 def login():
-    member_status=input("Are you a new member? Input yes or no")
-    if member_status=='yes':
-        #'member' object
+    member_status = input("Are you a new member? Input yes or no\n")
+    if member_status.lower() == 'yes':
+        # 'member' object
         global member
-        member=members.create_new_member()#prompt info request
+        global member_id
+        member = members.create_new_member()  # prompt info request
         try:
-            new_member_info_dict=member.get_member_info()
-            id=new_member_info_dict['id']
-            name=new_member_info_dict['name']
-            email=new_member_info_dict['email']
-            phone=new_member_info_dict['phone']
-            address=new_member_info_dict['address']
-            write_new_member_query="INSERT INTO members VALUES (%s, %s, %s, %s, %s, 0, 0, 0, FALSE)"
-            cursor.execute(write_new_member_query, (id, name, email, phone, address))
+            new_member_info_dict = member.get_member_info()
+            member_id = new_member_info_dict['id']
+            name = new_member_info_dict['name']
+            email = new_member_info_dict['email']
+            phone = new_member_info_dict['phone']
+            address = new_member_info_dict['address']
+            write_new_member_query = "INSERT INTO members VALUES (?, ?, ?, ?, ?, 0, 0, 0, FALSE)"
+            cursor.execute(write_new_member_query,(member_id, name, email, phone, address))
+            cnx.commit()
         except:
             print("Something wrong happened")
 
     else:
-        global member_id
-        member_id=input("Please input your customer id")
         
-        login_choice=input("Do you want to 1. check your membership information\n2. change your membership information\n3. check your history transactions")
-        if login_choice=="1":
-            old_member_info_sql="SELECT * from members where id=%s"
-            cursor.execute(old_member_info_sql, member_id)
+        member_id = input("Please input your customer id\n")
+        old_member_info_sql = "SELECT * from members where id=?"
+        try:
+            cursor.execute(old_member_info_sql, (member_id,))
             for row in cursor:
-                try:
-                    #actually global variable; get old_member
-                    member=members.member(row)
-                except:
-                    print("Some thing went wrong when get the old member object")
-        elif login_choice=="2":
-            change_prompt=input("You can only change\na: email\nb: phone number\nc: address")
-            if change_prompt=="a":
-                new_email=input("Please input your new email")
+                #actually global variable; get old_member
+                member = members.member(row)
+        except:
+            print("Something went wrong when get the old member object")
+
+        login_choice = input("Do you want to\n1. check your membership information\n2. change your membership information\n3. check your history transactions\n")
+        if login_choice == "1":
+            cursor.execute(old_member_info_sql, (member_id,)) 
+            #information interpretation
+            for row in cursor:
+                    print(row)
+        elif login_choice == "2":
+            change_prompt = input(
+                "You can only change\na: email\nb: phone number\nc: address\n")
+            if change_prompt == "a":
+                new_email = input("Please input your new email\n")
                 member.change_email(new_email)
-                change_email_sql="UPDATE members set email=%s where id=%s"
-                cursor.execute(change_email_sql, new_email, member_id)
-            elif change_prompt=="b":
-                new_phone=input("Please input your new phone number")
+                change_email_sql = "UPDATE members set email=? where id=?"
+                cursor.execute(change_email_sql, (new_email, member_id))
+                cnx.commit()
+            elif change_prompt == "b":
+                new_phone = input("Please input your new phone number")
                 member.change_phone(new_phone)
-                change_phone_sql="UPDATE members set phone=%s where id=%s"
-                cursor.execute(change_phone_sql, new_phone, member_id)
-            elif change_prompt=="c":
-                new_address=input("Please input your new address")
+                change_phone_sql = "UPDATE members set phone=? where id=?"
+                cursor.execute(change_phone_sql, (new_phone, member_id))
+                cnx.commit()
+            elif change_prompt == "c":
+                new_address = input("Please input your new address")
                 member.change_address(new_address)
-                change_address_sql="UPDATE members set address=%s where id=%s"
-                cursor.execute(change_address_sql, new_address, member_id)
-        elif login_choice=="3":
-            member_transaction_sql="SELECT * from transactions where customer_id=%s"
-            cursor.execute(member_transaction_sql, member_id)
+                change_address_sql = "UPDATE members set address=? where id=?"
+                cursor.execute(change_address_sql, (new_address, member_id))
+                cnx.commit()
+        elif login_choice == "3":
+            member_transaction_sql = "SELECT * from transactions where customer_id=?"
+            cursor.execute(member_transaction_sql, (member_id, ))
             for row in cursor:
                 print(row)
 
-
+#login()
 def checkout():
     transaction_time=datetime.now()
     customer_id=member_id
-    transaction_id=str(transaction_time.minute+transaction_time.second)+str(uuid.uuid4().int)[:4]# randomly generate transactionid according to time and uuid
-    items_name=[]
-    items_quantity=[]
-    items_price=[]
-    items_value=[]
+    global transaction_id
+    transaction_id=transaction_time.minute+transaction_time.second+int(str(uuid.uuid4().int)[:4])# randomly generate transactionid according to time and uuid
+    transaction_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    items_name=''
+    items_quantity=''
+    items_price=''
+    items_value=''
     while True:
-        item_name=input("Please input item name")
-        item_quantity=input("Please input your item quantity")
-        item_price=input("Please input yor item price")
-
-        items_name.append(item_name)
-        items_quantity.append(item_quantity)
-        items_price.append(item_price)
-        items_value.append(float(item_quantity)*float(item_price))
-        add_more=input("Do you want to add more items? yes/no")
-        if add_more.lower()=='no':
+        item_name=input("Please input item name\n")
+        item_quantity=input("Please input your item quantity\n")
+        item_price=input("Please input yor item price($/qty)\n")
+        item_value=str(float(item_quantity)*float(item_price))
+        items_name=items_name+item_name+','
+        items_quantity=items_quantity+item_quantity+','
+        items_price=items_price+item_price+','
+        items_value=items_value+item_value+','
+        add_more_request=input("Do you want to add more items? yes/no\n")
+        if add_more_request.lower()=='no':
             break
-    transaction_record_sql="INSERT INTO transactions VALUES (%s, %s, %s, %s, %s, %s, %s)"
-    cursor.execute(transaction_record_sql, (customer_id, transaction_id, items_name, items_quantity, items_price, items_value, transaction_time))
-    new_transaction=transactions.transaction(customer_id, transaction_id, items_name, items_quantity, items_price, items_value, transaction_time)
+    transaction_record_sql="INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?,?)"
+    cursor.execute(transaction_record_sql, (customer_id, transaction_id, items_name, items_quantity, items_price, items_value, transaction_time, '', ''))
+    cnx.commit()
+    new_transaction=transactions.transaction(customer_id, transaction_id, items_name, items_quantity, items_price, items_value, transaction_time, '', '')
     return new_transaction
 
 def payment_and_rate():
-    total_consumption_update_sql="UPDATE members SET total_consumption=%s "
-    credits_update_sql="UPDATE members SET credits=%s"
-    #deposit_update_sql="UPDATE members SET deposit=%s"
+    total_consumption_update_sql="UPDATE members SET total_consumption=? where id=?"
+    credits_update_sql="UPDATE members SET credits=? where id=?"
+    deposit_update_sql="UPDATE members SET deposit=? where id=?"
     #member should be a global variable
     login()
     new_transaction=checkout()
-    total_consumption=sum(new_transaction.items_value)
-    print(f"Your transaction value is {total_consumption}")
-    #print(f"Your account deposit is {member.deposit}")
-    #deposit_request=input("Do you want to add your account deposit, yes/no")
-    #if deposit_request.lower()=='yes':
-        #deposit_amount=float(input("How much you want to deposit"))
-        #member.add_deposit(float(deposit_amount))
-        #cursor.execute(deposit_update_sql, member.deposit)
-        #total_consumption=member.deposit-sum(new_transaction.items_value)
-        #if total_consumption<0:
-            #print("Fail for not enough deposit")
-    #else:
-        #payment_choice=input("Do you want to pay with your account deposit, yes/no")
-        #if payment_choice.lower()=='yes':
-         
-    member.add_consumption(total_consumption)# credits added at the same time
-    cursor.execute(total_consumption_update_sql, total_consumption)
-    cursor.execute(credits_update_sql, member.account_credits)
-    transactions.new_review(new_transaction)
-    transactions.new_rate(new_transaction)
+    #if the new_transaction can be recreated successfully, should be no problem
+    total_consumption=transactions.get_order_total(new_transaction)#new_transaction.items_value
+    print(f"Your total transaction value is {total_consumption}")
+    print(f"Your account deposit is {member.deposit}")
+    
+    deposit_request=input("Do you want to add your account deposit, yes/no\n")
+    if deposit_request.lower()=='yes':
+        deposit_amount=input("How much you want to deposit\n")        
+        member.add_deposit(float(deposit_amount))
+        cursor.execute(deposit_update_sql, (member.deposit, member_id))
+        cnx.commit()
 
+    payment_choice_request=input("Do you want to pay with your account deposit, yes/no\n")
+    if payment_choice_request.lower()=='yes':
+        if member.deposit-total_consumption<0:
+            print("Fail for not enough deposit. Cannot use deposit now.\n")#stop and use new money
+            #go to the bottom else
+            final_payment_choice='no'
+        else:
+            #use deposit to pay the total transaction value does not boost member total_consumption & credits
+            #when adding deposit, the same money generates 1.05times deposit
+            final_payment_choice='yes'
+            new_deposit=member.deposit-total_consumption
+            member.add_deposit(new_deposit)
+            cursor.execute(deposit_update_sql, (member.deposit, member_id))
+            cnx.commit()
+    if payment_choice_request.lower()=='no' or final_payment_choice.lower()=='no':
+        member.add_consumption(total_consumption)#credits changed at the same time
+        cursor.execute(total_consumption_update_sql, (member.total_consumption, member_id))
+        cnx.commit()
+        cursor.execute(credits_update_sql, (member.account_credits, member_id))
+        cnx.commit()
+
+    transactions.new_review(new_transaction)
+    review_update_sql="UPDATE transactions SET order_review=? where customer_id=? and transaction_id=?"
+    cursor.execute(review_update_sql, (new_transaction.order_review, member_id, transaction_id))
+    cnx.commit()
+    transactions.new_rate(new_transaction)
+    rate_update_sql="UPDATE transactions SET order_rate=? where customer_id=? and transaction_id=?"
+    cursor.execute(rate_update_sql, (new_transaction.order_rate, member_id, transaction_id))
+    cnx.commit()
+    
+    print("Thanks for shopping here!\n")
+
+payment_and_rate()
 
 cnx.close()

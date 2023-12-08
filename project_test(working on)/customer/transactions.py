@@ -1,6 +1,6 @@
 from datetime import datetime
 class transaction():
-    def __init__(self, customer_id=None, transaction_id=None, items_name=None, items_quantity=None, items_price=None, items_value=None, transaction_time=datetime.now()):
+    def __init__(self, customer_id=None, transaction_id=None, items_name=None, items_quantity=None, items_price=None, items_value=None, transaction_time=datetime.now(), order_review=None, order_rate=None):
         self.customer_id=customer_id
         self.transaction_id=transaction_id
         self.items_name=items_name
@@ -8,8 +8,8 @@ class transaction():
         self.items_price=items_price
         self.items_value=items_value#value=quantity*price
         self.transaction_time=transaction_time
-        self.order_review=""
-        self.order_rate=None
+        self.order_review=order_review
+        self.order_rate=order_rate
     def write_review(self, review):
         self.order_review=self.order_review+review
     def rate_order(self, rate):
@@ -30,38 +30,21 @@ class transaction():
         }
         return info_dict
 
-"""
-def create_new_transaction():
-    customer_id=input("Please input your member id")
-    items_name=[]
-    items_quantity=[]
-    items_price=[]
-    items_value=[]
-    while True:
-        item_name=input("Please input item name")
-        item_quantity=input("Please input your item quantity")
-        item_price=input("Please input yor item price")
 
-        items_name.append(item_name)
-        items_quantity.append(item_quantity)
-        items_price.append(item_price)
-        items_value.append(float(item_quantity)*float(item_price))
-        add_more=input("Do you want to add more items? yes/no")
-        if add_more.lower()=='no':
-            break
-    return transaction(customer_id, items_name, items_quantity, items_price, items_value)
-"""
+def get_order_total(Transaction):
+    value=Transaction.get_order_info()['value']#should be a 'a,b,c' format string
+    #value=value.split(',')
+    total_consumption=0
+    #for i in value:
+        #total_consumption=total_consumption+eval(i)
+    total_consumption=sum(eval(value))
+    return total_consumption
 
 def new_review(Transaction):
-    review=input("Please input your review about this order")
+    review=input("Please input your review about this order\n")
     Transaction.write_review(review)
-    return Transaction.order_review
-def new_rate(Transaction, rate):
-    rate=input("Please rate this order")
+    return Transaction
+def new_rate(Transaction):
+    rate=input("Please rate this order from a scale of 1 to 5 stars\n")
     Transaction.rate_order(rate)
-    return Transaction.order_rate
-#def reorder(Transaction):
-    #Transaction.reorder()
-
-
-#def deposit_deduction
+    return Transaction

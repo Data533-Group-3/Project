@@ -5,16 +5,20 @@ class member:
         self.__email=email
         self.__phone=phone
         self.__address=address
-        #self.deposit=0.0#with ransaction
+        self.deposit=0.0
         self.account_credits =0.0
-        self.total_consumption=0.0#with tranaction
+        self.total_consumption=0.0
         self.is_premium=False
     def check_premium_status(self):
-        if self.total_consumption>500000:
+        if self.total_consumption>50000:
             self.is_premium=True
             return True
-    #def add_deposit(self, value):
-        #self.deposit=self.deposit+ value
+    def add_deposit(self, value):
+        #same money generate 1.05 times deposit
+        deposit_value=1.05*value
+        self.deposit=self.deposit+ deposit_value
+        self.add_credits(deposit_value)
+        
     def add_credits(self, value):
         self.account_credits=self.account_credits+value
     
@@ -35,7 +39,7 @@ class member:
             "phone": self.__phone,
             "address": self.__address,
             "credits": self.account_credits,
-            #"deposit": self.deposit,
+            "deposit": self.deposit,
             "total consumption amount": self.total_consumption,
             "premium membership status": self.is_premium
         }
