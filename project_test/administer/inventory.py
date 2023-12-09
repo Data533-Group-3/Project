@@ -63,7 +63,7 @@ class extend_informa(inventory_informa):
         if self.item==other.item:
             quantity=self.quantity+other.quantity
             cost=(self.cost+other.cost)/quantity
-            for i in extend_informa.Store[1:]:
+            for i in inventory_informa.store[1:]:
                 if i[0]==other.item:
                    i[1]=quantity
                    i[2]=cost
@@ -81,10 +81,10 @@ class extend_informa(inventory_informa):
     def __str__(self):
         return f"{self.item} have {self.quantity} in store. The profit they can make is {self.profit}"
  
-def rollback2():
+def rollback2(mylist):
     top3=[]
     max=10000
-    for i in extend_informa.Store[1:]:
+    for i in mylist[1:]:
         
         if i[1]>max:
             max=i[1]
@@ -93,20 +93,20 @@ def rollback2():
     top3[0:3].sort(key=lambda x: x[2],reverse=False)
     return top3[0:3]        
         
-def rollback():#放外面
+def rollback(mylist):#放外面
     today=dt.today()
     sale_50=[]
     sale_80=[]
     sale={}
-    for i in range(1,len(inventory_informa.store)):
-        due=(today-inventory_informa.store[i][-1]).days
+    for i in range(1,len(mylist)):
+        due=(today-mylist[i][-1]).days
         if due<3:
             discount=0.5
-            sale_50.append([inventory_informa.store[i][0],inventory_informa.store[i][3]*discount,due])
+            sale_50.append([mylist[i][0],mylist[i][3]*discount,due])
             sale_50=sorted(sale_50,key=lambda x:x[2])
         elif due<7:
             discount=0.8
-            sale_80.append([inventory_informa.store[i][0],inventory_informa.store[i][3]*discount,due])
+            sale_80.append([mylist[i][0],mylist[i][3]*discount,due])
             sale_80=sorted(sale_80,key=lambda x:x[2])
     sale["50%"]=sale_50
     sale["80%"]=sale_80

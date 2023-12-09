@@ -8,7 +8,7 @@ Created on Wed Nov 29 21:08:10 2023
 import sqlite3 
 import random
 from administer import inventory
-
+from administer.account import eliminate,promotion, promotion1
 import customer as c
 
 # # make template table of inventory
@@ -45,17 +45,20 @@ while True:
                   choose 3: Promotion 2: increasing deposit according to credits
                   choose 4: Advertising: Announce close-due day items"""))
         if cus_judge==4:
-            print("Today's discount items as following:"+inventory.rollback())
+            
+            rollback=inventory.rollback()
+            print("Today's discount items as following:\n"+rollback)
         elif cus_judge==3:
-            pass
+            print("Here increasing deposit list is:\n"+promotion())
         elif cus_judge==2:
-            print()
-            options =inventory.rollback2()
-            probabilities = [0.5, 0.3, 0.2]
-            result = random.choices(options, weights=probabilities, k=1)[0]
-            print(result)
+            print("Here is distribution of present:\n"+promotion1())
+            # print()
+            # options =inventory.rollback2()
+            # probabilities = [0.5, 0.3, 0.2]
+            # result = random.choices(options, weights=probabilities, k=1)[0]
+            # print(result)
         else:
-            pass
+            print("Here expiry account list is:\n"+eliminate())
         ifquit=int(input("If you have another operation, press any button; Exiting interface presses 0"))
         if ifquit==0:
             break
@@ -116,9 +119,10 @@ while True:
                     invent_judge=int(input("""What do you want to do?
                               choose 1: Add new items
                               choose 2: Update sub_inventory
-                              choose 3: Combine inventory from main_inventory
+                              
                               else: Quit
                         """))
+                        # choose 3: Combine inventory from main_inventory
                     if invent_judge==1:
                             # judge=1
                             # while judge:
@@ -160,45 +164,45 @@ while True:
                             ifquit=int(input("If you have another operation, press any button; Exiting interface presses 0"))
                             if ifquit==0:
                                 break
-                    elif  invent_judge==3:
-                        # while True:
-                            item=input("which item do you want to add to sub_inventory from the main_inventory")
-                            cursor = cnx.cursor()
-                            cursor.execute("""select * from inventory 
-                                                where item=?""",(item)) 
-                            #only one row-main                 
-                            for row in cursor:
-                                A=inventory.inventory_informa("test",1000,3,6,"20231204")
-                                A.delete(row[0])
-                                #first delete and then initialize
-                                A=inventory.inventory_informa(row[0],row[1],row[2],row[3],row[4])  
-                                A.delete(item)
-                            cnx.close() 
+                    # elif  invent_judge==3:
+                    #     # while True:
+                    #         item=input("which item do you want to add to sub_inventory from the main_inventory")
+                    #         cursor = cnx.cursor()
+                    #         cursor.execute("""select * from inventory 
+                    #                             where item=?""",(item)) 
+                    #         #only one row-main                 
+                    #         for row in cursor:
+                    #             A=inventory.inventory_informa("test",1000,3,6,"20231204")
+                    #             A.delete(row[0])
+                    #             #first delete and then initialize
+                    #             A=inventory.inventory_informa(row[0],row[1],row[2],row[3],row[4])  
+                    #             A.delete(item)
+                    #         cnx.close() 
                             
-                            cursor = cnx.cursor()
-                            cursor.execute("""select * from sub_inventory 
-                                                where item=?""",(item)) 
-                            #sub
-                            for row in cursor:
-                                U=inventory.extend_informa("test",1000,3,6,"20231204")
-                                U.delete(row[0])
-                                U=inventory.extend_informa(row[0],row[1],row[2],row[3],row[4]) 
-                            cnx.close() 
+                    #         cursor = cnx.cursor()
+                    #         cursor.execute("""select * from sub_inventory 
+                    #                             where item=?""",(item)) 
+                    #         #sub
+                    #         for row in cursor:
+                    #             U=inventory.extend_informa("test",1000,3,6,"20231204")
+                    #             U.delete(row[0])
+                    #             U=inventory.extend_informa(row[0],row[1],row[2],row[3],row[4]) 
+                    #         cnx.close() 
                             
-                            #combine
-                            S=U+A
-                            print("The new item add in sub_inventory is",S)
-                            A.delete(item)
-                            cursor = cnx.cursor()
-                            cursor.execute("""Update sub_inventory 
-                                                set quantity=?,cost=?
-                                                where item=?""",(S.quantity,S.cost,item))     
-                            cnx.close()
-                            #delete
-                            cursor = cnx.cursor()   
-                            cursor.execute("""Delete from inventory 
-                                                where item=?""",(item))     
-                            cnx.close() 
+                    #         #combine
+                    #         S=U+A
+                    #         print("The new item add in sub_inventory is",S)
+                    #         A.delete(item)
+                    #         cursor = cnx.cursor()
+                    #         cursor.execute("""Update sub_inventory 
+                    #                             set quantity=?,cost=?
+                    #                             where item=?""",(S.quantity,S.cost,item))     
+                    #         cnx.close()
+                    #         #delete
+                    #         cursor = cnx.cursor()   
+                    #         cursor.execute("""Delete from inventory 
+                    #                             where item=?""",(item))     
+                    #         cnx.close() 
                     else:
                         break
                             # ifquit=int(input("If you have another operation, press any button; Exiting interface presses 0"))
