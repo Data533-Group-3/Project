@@ -7,7 +7,7 @@ Created on Mon Nov 20 21:28:46 2023
 from administer import inventory
 from administer.inventory import rollback2
 # import customer as c
-from datatime import datatime as dt
+from datetime import datetime as dt
 import sqlite3 
 import random
 
@@ -40,46 +40,61 @@ def eliminate():
     cursor.commit()
     cursor.close()
     return expired_member
-def promotion():#账户充钱
-    deposit_account={}
-    cnx=sqlite3.connect("Supermarket.db")
-    cursor=cnx.cursor()
-    cursor.execute("select id,deposit,credits from members")
-    cursor.commit()                                                    
-    for row in cursor:
-        if row[2]>100000:
-            deposit_account[row[0]]=row[1]*1.01
-            # return f"Congratulation! You gain {row[1]*1.01} in your account"
-        elif row[2]>50000:
-            deposit_account[row[0]]=row[1]*1.008
-            # return f"Congratulation! You gain {row[1]*1.008} in your account"
-        elif row[2]>10000:
-            deposit_account[row[0]]=row[1]*1.001
-            # return f"Congratulation! You gain {row[1]*1.001} in your account"
-    cursor.close()
+def promotion(member_class):#账户充钱
+    if member_class.account_credits>100000:
+        member_class.deposit=round(member_class.deposit*1.01,1)
+        # deposit_account[member_class.id]=member_class.deposit
+        return f"Congratulation! You gain {member_class.deposit} in your account"
+    elif member_class.account_credits>50000:
+        member_class.deposit=round(member_class.deposit*1.008,1)
+        # deposit_account[member_class.id]=member_class.deposit
+        return f"Congratulation! You gain {member_class.deposit} in your account"
+    elif member_class.account_credits>10000:
+        member_class.deposit=round(member_class.deposit*1.001,1)
+        # deposit_account[member_class.id]=member_class.deposit
+        return f"Congratulation! You gain {member_class.deposit} in your account"
+    else:
+        return "Nothing change about the deposit"
+
+    # deposit_account={}
+    # cnx=sqlite3.connect("Supermarket.db")
+    # cursor=cnx.cursor()
+    # cursor.execute("select id,deposit,credits from members")
+    # cursor.commit()                                                    
+    # for row in cursor:
+    #     if row[2]>100000:
+    #         deposit_account[row[0]]=row[1]*1.01
+    #         # return f"Congratulation! You gain {row[1]*1.01} in your account"
+    #     elif row[2]>50000:
+    #         deposit_account[row[0]]=row[1]*1.008
+    #         # return f"Congratulation! You gain {row[1]*1.008} in your account"
+    #     elif row[2]>10000:
+    #         deposit_account[row[0]]=row[1]*1.001
+    #         # return f"Congratulation! You gain {row[1]*1.001} in your account"
+    # cursor.close()
     
-    ##update
-    cnx=sqlite3.connect("Supermarket.db")
-    cursor=cnx.cursor()
-    for i in deposit_account:
-        cursor.execute("""update members set deposit=? where id=?"""(i.values(),i.key()))
-    cursor.commit()                                                    
-    cursor.close()
-    return deposit_account
-    # if points>100000:
-    #     price=[]
-    #     for i in inventory_informa.store[1:]:
-    #         price.append(i[3]*0.8)
-    # elif points>50000:
-    #     price=[]
-    #     for i in inventory_informa.store[1:]:
-    #         price.append(i[3]*0.85)
-    # elif points>50000:
-    #     price=[]
-    #     for i in inventory_informa.store[1:]:
-    #         price.append(i[3]*0.95)
+    # ##update
+    # cnx=sqlite3.connect("Supermarket.db")
+    # cursor=cnx.cursor()
+    # for i in deposit_account:
+    #     cursor.execute("""update members set deposit=? where id=?"""(i.values(),i.key()))
+    # cursor.commit()                                                    
+    # cursor.close()
+    # return deposit_account
+    # # if points>100000:
+    # #     price=[]
+    # #     for i in inventory_informa.store[1:]:
+    # #         price.append(i[3]*0.8)
+    # # elif points>50000:
+    # #     price=[]
+    # #     for i in inventory_informa.store[1:]:
+    # #         price.append(i[3]*0.85)
+    # # elif points>50000:
+    # #     price=[]
+    # #     for i in inventory_informa.store[1:]:
+    # #         price.append(i[3]*0.95)
     
-#        i=input("do you want to change something:")
+
 def promotion1():#分配
     list1=[]
     gift={}

@@ -20,7 +20,7 @@ class Testpromotion(unittest.TestCase):
         print("setUpClass")
     @classmethod
     def tearDownClass(cls):
-        print("tearDownClass")
+        print("tearDownClass\n")
     def setUp(self):
         self.q1=member(id=1, name="Bob", email="Bob@gmail.com", phone="12345", address="kelowna")
         self.q2=member(id=2, name="Nancy", email="Nancy@gmail.com", phone="678910", address="richmond")

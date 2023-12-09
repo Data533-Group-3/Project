@@ -26,12 +26,12 @@ class inventory_informa:
             by negative or positive values of quantity"""
         for i in inventory_informa.store[1:]:
             if i[0]==item:
-                if quantity>0 & i[2]!=cost: #这里是进货
+                if quantity>0 and i[2]!=cost: #这里是进货
                     i[2]=(quantity*cost+i[1]*i[2])/(quantity+i[1])
-                    i[1]+=quantity
+                    i[1]=quantity+i[1]
                     return ("Suggest to adjust the price."+f"{i[0]} remains {i[1]}")
                 else:
-                    i[1]+=quantity
+                    i[1]=quantity+i[1]
                     return f"{i[0]} remains {i[1]}"
     @property
     def profit(self):
@@ -42,23 +42,6 @@ class inventory_informa:
         for i in inventory_informa.store[1:]:
             if i[0]==item:
                 inventory_informa.store.remove(i)
-
-
-            
-
-#你想弄一个加法，每次initialize的时候是不是会重复计算
-class extend_informa(inventory_informa):
-    Kinds=0
-    Store=[["item_name-measurement_unit","quantity","unit cost","unit price","date"]]
-    #滞销商品
-    def __init__(self, item, quantity, cost, price, expire):
-        self.item=item
-        self.quantity=quantity
-        self.cost=cost
-        self.price=price
-        self.expire=dt.strptime(expire,"%Y%m%d")
-        extend_informa.Store.append([self.item,self.quantity,self.cost,self.price])
-        extend_informa.Kinds+=1 
     def __add__(self,other):
         if self.item==other.item:
             quantity=self.quantity+other.quantity
@@ -76,7 +59,24 @@ class extend_informa(inventory_informa):
             if choice==1:
                 inventory_informa.store.append([other.item,other.quantity,other.cost,other.price,other.expire])
             elif choice==0:            
-                return "Rewrite the standard style like {self.item}"         
+                return "Rewrite the standard style like {self.item}"    
+
+
+            
+
+#你想弄一个加法，每次initialize的时候是不是会重复计算
+class extend_informa(inventory_informa):
+    Kinds=0
+    Store=[["item_name-measurement_unit","quantity","unit cost","unit price","date"]]
+    #滞销商品
+    def __init__(self, item, quantity, cost, price, expire):
+        self.item=item
+        self.quantity=quantity
+        self.cost=cost
+        self.price=price
+        self.expire=dt.strptime(expire,"%Y%m%d")
+        extend_informa.Store.append([self.item,self.quantity,self.cost,self.price])
+        extend_informa.Kinds+=1      
  
     def __str__(self):
         return f"{self.item} have {self.quantity} in store. The profit they can make is {self.profit}"
