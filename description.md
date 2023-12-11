@@ -1,4 +1,4 @@
-# Description of The Package
+## Description of The Package
 
 Group 3: Han Chen, Jade Yu
 
