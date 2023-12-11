@@ -12,34 +12,36 @@ import sqlite3
 import random
 
 
-def eliminate():
-    # if tran_class.transaction_time
-    # points=c.members.member().get_member_info(1,2,3,4,5,6,7,8)["credits"]
-    # def eliminate(self):
-    #     purchase_day=c.transactions.Transaction(1,1,1,1,1).get_order_info()[2]
-    #     if (dt.today()-purchase_day).day>=31:
+def eliminate(Transaction_class,member_class):
+    today=dt.today()
+    diff=(today-Transaction_class.transaction_time).days
+    # diff=2
+    if diff>30:
+        member_class.account_credits=0
+        return f"You account_credits become {member_class.account_credits}"
+    else:
+        return f"You account_credits will be eliminated in {30-diff} days. Come to Superman."
+    # expired_member=[]
+    # cnx=sqlite3.connect("Supermarket.db")
+    # cursor=cnx.cursor()
+    # cursor.execute("select customer_id,transaction_time from transactions")
+    # for row in cursor:
+    #     if (dt.today()-row[1]).day>=31:
     #         points=0
-    expired_member=[]
-    cnx=sqlite3.connect("Supermarket.db")
-    cursor=cnx.cursor()
-    cursor.execute("select customer_id,transaction_time from transactions")
-    for row in cursor:
-        if (dt.today()-row[1]).day>=31:
-            points=0
-            expired_member.append(row[0])
-            # return f"It's so sorry that there are {row[0]} credits expiring from your account"
-        else:
-            points=row[1]
-            # return f"There are {row[0]} credits in your account. Enjoy your shopping in Superman!"
-    cursor.commit()
-    cursor.close()
-    ##update
-    cnx=sqlite3.connect("Supermarket.db")
-    cursor=cnx.cursor()
-    cursor.execute("update members set credits=0 when id in ?"(expired_member))
-    cursor.commit()
-    cursor.close()
-    return expired_member
+    #         expired_member.append(row[0])
+    #         # return f"It's so sorry that there are {row[0]} credits expiring from your account"
+    #     else:
+    #         points=row[1]
+    #         # return f"There are {row[0]} credits in your account. Enjoy your shopping in Superman!"
+    # cursor.commit()
+    # cursor.close()
+    # ##update
+    # cnx=sqlite3.connect("Supermarket.db")
+    # cursor=cnx.cursor()
+    # cursor.execute("update members set credits=0 when id in ?;"(expired_member))
+    # cursor.commit()
+    # cursor.close()
+    # return expired_member
 def promotion(member_class):#账户充钱
     if member_class.account_credits>100000:
         member_class.deposit=round(member_class.deposit*1.01,1)
@@ -81,38 +83,31 @@ def promotion(member_class):#账户充钱
     # cursor.commit()                                                    
     # cursor.close()
     # return deposit_account
-    # # if points>100000:
-    # #     price=[]
-    # #     for i in inventory_informa.store[1:]:
-    # #         price.append(i[3]*0.8)
-    # # elif points>50000:
-    # #     price=[]
-    # #     for i in inventory_informa.store[1:]:
-    # #         price.append(i[3]*0.85)
-    # # elif points>50000:
-    # #     price=[]
-    # #     for i in inventory_informa.store[1:]:
-    # #         price.append(i[3]*0.95)
+
     
 
-def promotion1():#分配
-    list1=[]
+def promotion1(cus_list):#分配
+    # cus_list=[]
+    # gift={}
+    # cnx=sqlite3.connect("Supermarket.db")
+    # cursor=cnx.cursor()
+    # cursor.execute("""select customer_id from members order by credits limit 3""")
+    # cursor.commit()      
+    # for row in cursor:
+    #     cus_list.append(row)
+    # cursor.close()
+    
     gift={}
-    cnx=sqlite3.connect("Supermarket.db")
-    cursor=cnx.cursor()
-    cursor.execute("""select customer_id from members order by credits limit 3""")
-    cursor.commit()      
-    for row in cursor:
-        list1.append(row)
-    cursor.close()
     items=rollback2(inventory.inventory_informa.store)
     
     probability_1 = 0.5
     probability_2 = 0.3
     probability_3 = 0.2
     
-    
-    for i in list1:
+#The first is best,The second is worst, The last is median.   
+    for n,i in enumerate(cus_list):
+        m=n+1
+        random.seed(m*2)
         rand_num = random.random()
     
         # 根据概率分布确定随机数的范围

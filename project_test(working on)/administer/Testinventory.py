@@ -34,4 +34,4 @@ class TestInventory(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         print("tearDownClass\n")
-unittest.main(module="Testinventory")
+# unittest.main(module="Testinventory")
