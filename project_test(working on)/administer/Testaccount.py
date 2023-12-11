@@ -28,21 +28,21 @@ class Testpromotion(unittest.TestCase):
         self.q4=member(id=2, name="Mike", email="ME@gmail.com", phone="456788", address="Vancouver")
     def tearDown(self):
         print("tearDown")
-    def testElimiate(self):
+    def testPromotion(self):
         self.q1.add_deposit(100000)
         self.q2.add_deposit(50000)
         self.q3.add_deposit(10000)
         self.q4.add_deposit(100)
         
         
-        # self.q1.add_credits(110000)
-        # self.q2.add_credits(55000)
-        # self.q3.add_credits(11000)
-        # self.q4.add_credits(200)
+        self.q1.add_credits(110000)
+        self.q2.add_credits(55000)
+        self.q3.add_credits(11000)
+        self.q4.add_credits(200)
         
 
         self.assertEqual(promotion(self.q1), "Congratulation! You gain 106050.0 in your account")
-        self.assertEqual(promotion(self.q2), "Congratulation! You gain 52920.0 in your account")
+        self.assertEqual(promotion(self.q2), "Congratulation! You gain 53025.0 in your account")
         self.assertEqual(promotion(self.q3), "Congratulation! You gain 10510.5 in your account")
         self.assertEqual(promotion(self.q4), "Nothing change about the deposit")
-unittest.main(module='Testaccount')
+# unittest.main()

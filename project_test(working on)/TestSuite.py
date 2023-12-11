@@ -15,7 +15,7 @@ def my_suite():
     result = unittest.TestResult()
     suite.addTest(TestInventory('testupdate'))
     suite.addTest(TestInventory('testprofit'))
-    suite.addTest(Testpromotion('testElimiate'))                                            
+    suite.addTest(Testpromotion('testPromotion'))                                            
     runner = unittest.TextTestRunner()
     print(runner.run(suite))
 my_suite()
