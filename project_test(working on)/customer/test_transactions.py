@@ -134,4 +134,4 @@ class Testtransactions(unittest.TestCase):
         __builtins__.input = original_inputs
 
 
-unittest.main(argv=[''], verbosity=2, exit=False)
+# unittest.main(argv=[''], verbosity=2, exit=False)

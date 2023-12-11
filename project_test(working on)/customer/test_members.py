@@ -169,4 +169,4 @@ class Testmembers(unittest.TestCase):
         self.assertEqual(new_member._member__address, '123 Street Kelowna')
 
 
-unittest.main(argv=[''], verbosity=2, exit=False)
+# unittest.main(argv=[''], verbosity=2, exit=False)
