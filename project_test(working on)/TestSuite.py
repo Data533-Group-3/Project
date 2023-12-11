@@ -9,19 +9,37 @@ import unittest
 import sys
 sys.path.append('administer')
 sys.path.append('customer')
-from administer.Testaccount import Testpromotion
-from administer.Testinventory import TestInventory
+from administer.Testinventory_class import TestInventory
+from administer.Testinventory_rollback import Testrollback
+#from administer.Testaccount import Testpromotion
+from administer.Testaccount_promotion import Testpromotion
+from administer.Testaccount_promotion1 import Testpromotion1
+#from administer.Testinventory import TestInventory
 import customer
 from customer.test_members import Testmembers
 from customer.test_transactions import Testtransactions
 def my_suite():
     suite = unittest.TestSuite()
     result = unittest.TestResult()
+    #suite.addTest(TestInventory('testupdate'))
+    #suite.addTest(TestInventory('testprofit'))
+    #suite.addTest(Testpromotion('testPromotion'))                                            
+    #suite.addTest(Testpromotion('testElimiate')) 
+    #class-inventory
+    suite.addTest(TestInventory('test__add__'))
+    suite.addTest(TestInventory('test__int__'))
+    suite.addTest(TestInventory('test__str__'))
     suite.addTest(TestInventory('testupdate'))
     suite.addTest(TestInventory('testprofit'))
-    suite.addTest(Testpromotion('testPromotion'))                                            
-    suite.addTest(Testpromotion('testElimiate')) 
-    
+    suite.addTest(TestInventory('testdelete'))
+    #function-inventory
+    suite.addTest(Testrollback('testrollback'))   
+    suite.addTest(Testrollback('testrollback2'))   
+    #function-account
+    suite.addTest(Testpromotion1('testpromotion'))    
+    suite.addTest(Testpromotion('testpromotion'))       
+    suite.addTest(Testpromotion('testeliminate'))   
+
     suite.addTest(Testmembers('test_check_premium_status')) 
     suite.addTest(Testmembers('test_add_deposit'))
     suite.addTest(Testmembers('test_add_credits'))

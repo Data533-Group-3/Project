@@ -6,8 +6,8 @@ Created on Mon Nov 20 22:22:04 2023
 """
 from datetime import datetime as dt
 from datetime import timedelta 
-milk_expire=dt.strptime("20231123", "%Y%m%d")
-
+# milk_expire=dt.strptime("20231125", "%Y%m%d")
+milk_expire=dt.strptime((dt.today()+timedelta(days=-16)).strftime("%Y%m%d"), "%Y%m%d")
 class inventory_informa:
     #单位成本
     kinds=0
@@ -52,9 +52,9 @@ class inventory_informa:
                     return f"Have removed {item}"
             return "We don't have such kind of item"
     
-        except  IndexError:
-            print("IndexError\n")
-            return None
+        # except  IndexError:
+        #     print("IndexError\n")
+        #     return None
         except Exception as ex:
             print(f"{ex}\n")
             return None
@@ -128,10 +128,10 @@ def rollback2(mylist):
             if i[1]>max:
                 # max=i[1]
                 top3.append([i[0],i[1],i[2]])
-    except  IndexError:
-        print("IndexError\n")
-    except TypeError:
-        print("TypeError\n")
+    # except  IndexError:
+    #     print("IndexError\n")
+    # except TypeError:
+    #     print("TypeError\n")
     except Exception as ex:
         print(f"{ex}\n")
     finally:
@@ -150,14 +150,14 @@ def rollback(mylist):#放外面
     for i in range(1,len(mylist)):
         try:
             due=(mylist[i][-1]-today).days
-        except TypeError:
-            print("TypeError")
-            print("The last item of your list is not datetime type.\n")
-            continue
-        except IndexError:
-            print("IndexError")
-            print("There is no item in your list of list.\n")
-            continue
+        # except TypeError:
+        #     print("TypeError")
+        #     print("The last item of your list is not datetime type.\n")
+        #     continue
+        # except IndexError:
+        #     print("IndexError")
+        #     print("There is no item in your list of list.\n")
+        #     continue
         except Exception as ex:
             print(f"{ex}\n")
             continue
@@ -170,14 +170,14 @@ def rollback(mylist):#放外面
                 discount=0.8
                 sale_80.append([mylist[i][0],mylist[i][3]*discount,due])
                 sale_80=sorted(sale_80,key=lambda x:x[2])
-        except IndexError:
-            print("IndexError")
-            print("There are less than 3 elements in your sub-list.\n")
-            continue
-        except TypeError:
-            print("TypeError")
-            print("The last item of your list is not datetime type.\n")
-            continue
+        # except IndexError:
+        #     print("IndexError")
+        #     print("There are less than 3 elements in your sub-list.\n")
+        #     continue
+        # except TypeError:
+        #     print("TypeError")
+        #     print("The last item of your list is not datetime type.\n")
+        #     continue
         except Exception as ex:
             print(f"{ex}\n")
             continue
