@@ -6,10 +6,14 @@ Created on Fri Dec  8 19:03:00 2023
 """
 
 import unittest
-import customer.members
+from datetime import datetime as dt
+from datetime import timedelta 
+
 import administer.account
-from administer.account import promotion
+from administer.account import promotion,eliminate
+import customer.members
 from customer.members import member
+from customer.transactions import transaction
 import importlib
 importlib.reload(administer.account)
 importlib.reload(customer.members)
@@ -26,6 +30,12 @@ class Testpromotion(unittest.TestCase):
         self.q2=member(id=2, name="Nancy", email="Nancy@gmail.com", phone="678910", address="richmond")
         self.q3=member(id=2, name="Maria", email="MA@gmail.com", phone="unknown", address="unknown")
         self.q4=member(id=2, name="Mike", email="ME@gmail.com", phone="456788", address="Vancouver")
+        
+        self.p1=transaction(items_name="milk", items_value=3, transaction_time=dt.today()-timedelta(days=3))
+        self.p2=transaction(items_name="flower", items_value=99, transaction_time=dt.today()-timedelta(days=40))
+        self.p3=transaction(items_name="apples", items_value=1, transaction_time=dt.today()-timedelta(days=7))
+        self.p4=transaction(items_name="bananas", items_value=2, transaction_time=dt.today()-timedelta(days=30))
+ 
     def tearDown(self):
         print("tearDown")
     def testPromotion(self):
@@ -45,4 +55,10 @@ class Testpromotion(unittest.TestCase):
         self.assertEqual(promotion(self.q2), "Congratulation! You gain 53025.0 in your account")
         self.assertEqual(promotion(self.q3), "Congratulation! You gain 10510.5 in your account")
         self.assertEqual(promotion(self.q4), "Nothing change about the deposit")
+        
+    def testElimiate(self):
+        self.assertEqual(eliminate(self.p1,self.q1), "You account_credits will be eliminated in 27 days. Come to Superman.")
+        self.assertEqual(eliminate(self.p2,self.q4), "You account_credits become 0")  
+        self.assertEqual(eliminate(self.p3,self.q2), "You account_credits will be eliminated in 23 days. Come to Superman.")
+        self.assertEqual(eliminate(self.p4,self.q3), "You account_credits will be eliminated in 0 days. Come to Superman.")  
 # unittest.main()
