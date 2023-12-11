@@ -5,60 +5,21 @@ Created on Fri Dec  8 20:48:50 2023
 @author: Administrator
 """
 
-# from unittest import result
-# from parser import suite
 import unittest
 import sys
-import administer
-import customer
 sys.path.append('administer')
 sys.path.append('customer')
-<<<<<<< HEAD
+import customer
 from administer.Testaccount import Testpromotion
 from administer.Testinventory import TestInventory
-=======
-from administer.Testinventory_class import TestInventory
-from administer.Testinventory_rollback import Testrollback
-#from administer.Testaccount import Testpromotion
-from administer.Testaccount_promotion import Testpromotion
-from administer.Testaccount_promotion1 import Testpromotion1
-#from administer.Testinventory import TestInventory
-import customer
->>>>>>> 42a97b07ad960b303f1815fadb1a98f1c046e37d
 from customer.test_members import Testmembers
 from customer.test_transactions import Testtransactions
 def my_suite():
     suite = unittest.TestSuite()
     result = unittest.TestResult()
-    #suite.addTest(TestInventory('testupdate'))
-    #suite.addTest(TestInventory('testprofit'))
-    #suite.addTest(Testpromotion('testPromotion'))                                            
-    #suite.addTest(Testpromotion('testElimiate')) 
-    #class-inventory
-    suite.addTest(TestInventory('test__add__'))
-    suite.addTest(TestInventory('test__int__'))
-    suite.addTest(TestInventory('test__str__'))
     suite.addTest(TestInventory('testupdate'))
     suite.addTest(TestInventory('testprofit'))
-<<<<<<< HEAD
     suite.addTest(Testpromotion('testElimiate')) 
-    # runner = unittest.TextTestRunner()
-    # print(runner.run(suite))
-    # my_suite()
-# def my_suite_2():
-#     suite=unittest.TestSuite()
-#     result=unittest.TestResult
-=======
-    suite.addTest(TestInventory('testdelete'))
-    #function-inventory
-    suite.addTest(Testrollback('testrollback'))   
-    suite.addTest(Testrollback('testrollback2'))   
-    #function-account
-    suite.addTest(Testpromotion1('testpromotion'))    
-    suite.addTest(Testpromotion('testpromotion'))       
-    suite.addTest(Testpromotion('testeliminate'))   
-
->>>>>>> 42a97b07ad960b303f1815fadb1a98f1c046e37d
     suite.addTest(Testmembers('test_check_premium_status')) 
     suite.addTest(Testmembers('test_add_deposit'))
     suite.addTest(Testmembers('test_add_credits'))
@@ -67,14 +28,13 @@ def my_suite():
     suite.addTest(Testmembers('test_change_email'))
     suite.addTest(Testmembers('test_change_phone'))
     suite.addTest(Testmembers('test_change_address'))
-    # suite.addTest(Testmembers('test_create_new_member'))
+    suite.addTest(Testmembers('test_create_new_member'))
     suite.addTest(Testtransactions('test_write_review'))
     suite.addTest(Testtransactions('test_rate_order'))
     suite.addTest(Testtransactions('test_get_order_info'))
     suite.addTest(Testtransactions('test_get_order_total'))
-    # suite.addTest(Testtransactions('test_new_review'))
-    # suite.addTest(Testtransactions('test_new_rate'))
+    suite.addTest(Testtransactions('test_new_review'))
+    suite.addTest(Testtransactions('test_new_rate'))
     runner = unittest.TextTestRunner()
     print(runner.run(suite))
 my_suite()
-# my_suite_2()

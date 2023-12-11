@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime
 import uuid
-#from distutils.util import execute
+from distutils.util import execute
 import members
 import transactions
 try:
@@ -15,15 +15,14 @@ try:
 except sqlite3.Error as err:
     print(err)
 
-# def CustomError(Exception):
-#     def __init__(self, message="A custom error occured"):
-#         self.message=message
-#         # super().__init__(self.message)
-
-# def user_error(value):
-#     if value <0:
-#         raise CustomError("This value can not be negative")
-
+class MyCustomError(Exception):
+    def __init__(self, message="A custome error occured"):
+        self.message=message
+        super().__init__(self.message)
+def CustomeError(value):
+    if float(value) <0:
+        raise MyCustomError("This value should be a non-negative value")
+    
 def login():
     member_status = input("Are you a new member? Input yes or no\n")
     if member_status.lower() == 'yes':
@@ -41,8 +40,9 @@ def login():
             write_new_member_query = "INSERT INTO members VALUES (?, ?, ?, ?, ?, 0, 0, 0, FALSE)"
             cursor.execute(write_new_member_query,(member_id, name, email, phone, address))
             cnx.commit()
-        except:
+        except KeyError as err:
             print("Something wrong happened")
+            print(err)
 
     else:
         member_id = input("Please input your customer id\n")
@@ -50,17 +50,19 @@ def login():
         cursor.execute(old_member_info_sql, (member_id,))
         result=cursor.fetchone()
         if result:
-            #for row in cursor:
-                #actually global variable; get old_member
-            id=result[0]
-            name=result[1]
-            email=result[2]
-            phone=result[3]
-            address=result[4]
-            deposit=result[5]
-            credits=result[6]
-            total_consumption=result[7]
-            premium_status=result[8]
+            try:
+                id=result[0]
+                name=result[1]
+                email=result[2]
+                phone=result[3]
+                address=result[4]
+                deposit=result[5]
+                credits=result[6]
+                total_consumption=result[7]
+                premium_status=result[8]
+            except IndexError as err:
+                print("Something went wrong here.")
+                print(err)
             member=members.member(id, name, email, phone, address, deposit, credits, total_consumption, premium_status)
         while True:
             login_choice = input("Do you want to\n1. check your membership information\n2. change your membership information\n3. check your history transactions\nPlease enter 'exit' to proceed checking out\n")
@@ -111,7 +113,16 @@ def checkout():
         item_name=input("Please input your purchased item name\n")
         item_quantity=input("Please input the item quantity\n")
         item_price=input("Please input the item price($/qty)\n")
-        item_value=str(float(item_quantity)*float(item_price))
+        try:
+            CustomeError(item_quantity)
+            CustomeError(item_price)
+        except MyCustomError as e:
+            print(f"Error: {e}")
+        try:
+            item_value=str(float(item_quantity)*float(item_price))
+        except ArithmeticError as err:
+            print("Something went wrong here")
+            print(err)
         items_name=items_name+item_name+','
         items_quantity=items_quantity+item_quantity+','
         items_price=items_price+item_price+','
@@ -131,20 +142,13 @@ def payment_and_rate():
     deposit_update_sql="UPDATE members SET deposit=? where id=?"
     login()
     new_transaction=checkout()
-
-
-
-
-    # try: 
-    #     total_value=transactions.get_order_total(new_transaction)#new_transaction.items_value
-    #     print(f"Your total transaction value is {total_value}")
-    #     print(f"Your account deposit is {member.deposit}")
-    # except CustomError as err:
-    #     print(f"Custom Error: {err}")
-
-
-
-
+    total_value=transactions.get_order_total(new_transaction)#new_transaction.items_value
+    print(f"Your total transaction value is {total_value}")
+    try:
+        print(f"Your account deposit is {member.deposit}")
+    except NameError as err:
+        print("Member is not defined")
+        print(err)
     deposit_request=input("Do you want to add your account deposit, yes/no\n")
     if deposit_request.lower()=='yes':
         deposit_amount=input("How much you want to deposit\n")
