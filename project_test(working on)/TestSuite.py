@@ -5,9 +5,14 @@ Created on Fri Dec  8 20:48:50 2023
 @author: Administrator
 """
 
+# from unittest import result
+# from parser import suite
 import unittest
 import sys
+import administer
+import customer
 sys.path.append('administer')
+sys.path.append('customer')
 from administer.Testaccount import Testpromotion
 from administer.Testinventory import TestInventory
 from customer.test_members import Testmembers
@@ -18,6 +23,12 @@ def my_suite():
     suite.addTest(TestInventory('testupdate'))
     suite.addTest(TestInventory('testprofit'))
     suite.addTest(Testpromotion('testElimiate')) 
+    # runner = unittest.TextTestRunner()
+    # print(runner.run(suite))
+    # my_suite()
+# def my_suite_2():
+#     suite=unittest.TestSuite()
+#     result=unittest.TestResult
     suite.addTest(Testmembers('test_check_premium_status')) 
     suite.addTest(Testmembers('test_add_deposit'))
     suite.addTest(Testmembers('test_add_credits'))
@@ -36,3 +47,4 @@ def my_suite():
     runner = unittest.TextTestRunner()
     print(runner.run(suite))
 my_suite()
+# my_suite_2()

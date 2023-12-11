@@ -36,7 +36,7 @@ def eliminate():
     ##update
     cnx=sqlite3.connect("Supermarket.db")
     cursor=cnx.cursor()
-    cursor.execute("update members set credits=0 when id in ?"(expired_member))
+    cursor.execute("update members set credits=0 when id in ?", (expired_member))
     cursor.commit()
     cursor.close()
     return expired_member

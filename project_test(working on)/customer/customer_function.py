@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime
 import uuid
-from distutils.util import execute
+#from distutils.util import execute
 import members
 import transactions
 try:
@@ -15,6 +15,14 @@ try:
 except sqlite3.Error as err:
     print(err)
 
+# def CustomError(Exception):
+#     def __init__(self, message="A custom error occured"):
+#         self.message=message
+#         # super().__init__(self.message)
+
+# def user_error(value):
+#     if value <0:
+#         raise CustomError("This value can not be negative")
 
 def login():
     member_status = input("Are you a new member? Input yes or no\n")
@@ -123,9 +131,20 @@ def payment_and_rate():
     deposit_update_sql="UPDATE members SET deposit=? where id=?"
     login()
     new_transaction=checkout()
-    total_value=transactions.get_order_total(new_transaction)#new_transaction.items_value
-    print(f"Your total transaction value is {total_value}")
-    print(f"Your account deposit is {member.deposit}")
+
+
+
+
+    # try: 
+    #     total_value=transactions.get_order_total(new_transaction)#new_transaction.items_value
+    #     print(f"Your total transaction value is {total_value}")
+    #     print(f"Your account deposit is {member.deposit}")
+    # except CustomError as err:
+    #     print(f"Custom Error: {err}")
+
+
+
+
     deposit_request=input("Do you want to add your account deposit, yes/no\n")
     if deposit_request.lower()=='yes':
         deposit_amount=input("How much you want to deposit\n")
