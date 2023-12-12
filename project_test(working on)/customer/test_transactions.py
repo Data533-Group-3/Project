@@ -104,34 +104,34 @@ class Testtransactions(unittest.TestCase):
 
     def test_new_review(self):
         input_values = ['review 1']
-        original_inputs = __builtins__.input
-        __builtins__.input = lambda _: input_values.pop(0)
+        original_inputs = __builtins__["input"]
+        __builtins__["input"] = lambda _: input_values.pop(0)
         self.trans1_new = transactions.new_review(self.trans1)
         self.assertIsInstance(self.trans1_new, transactions.transaction)
         self.assertEqual(self.trans1_new.order_review,
                          "bought salad and chips, goodreview 1")
 
         input_values = ['review 2']
-        __builtins__.input = lambda _: input_values.pop(0)
+        __builtins__["input"] = lambda _: input_values.pop(0)
         self.trans2_new = transactions.new_review(self.trans2)
         self.assertIsInstance(self.trans2_new, transactions.transaction)
         self.assertEqual(self.trans2_new.order_review, "greatreview 2")
-        __builtins__.input = original_inputs
+        __builtins__["input"] = original_inputs
 
     def test_new_rate(self):
         input_values = ['1']
-        original_inputs = __builtins__.input
-        __builtins__.input = lambda _: input_values.pop(0)
+        original_inputs = __builtins__["input"]
+        __builtins__["input"] = lambda _: input_values.pop(0)
         self.trans3_new = transactions.new_rate(self.trans3)
         self.assertIsInstance(self.trans3_new, transactions.transaction)
         self.assertEqual(self.trans3_new.order_rate, "1")
 
         input_values = ['2']
-        __builtins__.input = lambda _: input_values.pop(0)
+        __builtins__["input"] = lambda _: input_values.pop(0)
         self.trans4_new = transactions.new_rate(self.trans4)
         self.assertIsInstance(self.trans4_new, transactions.transaction)
         self.assertEqual(self.trans4_new.order_rate, "2")
-        __builtins__.input = original_inputs
+        __builtins__["input"] = original_inputs
 
 
-# unittest.main(argv=[''], verbosity=2, exit=False)
+unittest.main(argv=[''], verbosity=2, exit=False)

@@ -9,7 +9,7 @@ import unittest
 # import administer.inventory
 # from administer.inventory import extend_informa
  
-import inventory
+#import inventory
 from inventory import extend_informa
 from inventory import inventory_informa
 from datetime import datetime as dt

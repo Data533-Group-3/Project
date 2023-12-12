@@ -157,10 +157,10 @@ class Testmembers(unittest.TestCase):
     def test_create_new_member(self):
         input_values = ["8", "John Doe", "john@gmail.com",
                         "1234567", "123 Street Kelowna"]
-        original_input = __builtins__.input
-        __builtins__.input = lambda _: input_values.pop(0)
+        original_input = __builtins__["input"]
+        __builtins__["input"] = lambda _: input_values.pop(0)
         new_member = members.create_new_member()
-        __builtins__.input = original_input  # restore input() in the built-in name space
+        __builtins__["input"] = original_input  # restore input() in the built-in name space
         self.assertIsInstance(new_member, members.member)
         self.assertEqual(new_member._member__id, '8')
         self.assertEqual(new_member._member__name, 'John Doe')
@@ -169,4 +169,4 @@ class Testmembers(unittest.TestCase):
         self.assertEqual(new_member._member__address, '123 Street Kelowna')
 
 
-# unittest.main(argv=[''], verbosity=2, exit=False)
+unittest.main(argv=[''], verbosity=2, exit=False)

@@ -30,11 +30,11 @@ class inventory_informa:
                     if quantity>0 and i[2]!=cost: #这里是进货
                         i[2]=(quantity*cost+i[1]*i[2])/(quantity+i[1])
                         i[1]=quantity+i[1]
-                        return ("Suggest to adjust the price."+f"{i[0]} remains {i[1]}")
+                        return "Suggest to adjust the price.{} remains {}".format(i[0], i[1])
                     else:
                         old=i[1]
                         i[1]=quantity+old
-                        return f"{i[0]} remains {i[1]}"
+                        return "{} remains {}".format(i[0], i[1])
             return "No item here"
         except Exception as ex:
             print(f"{ex}\n")
@@ -49,14 +49,14 @@ class inventory_informa:
             for i in inventory_informa.store[1:]:
                 if i[0]==item:
                     inventory_informa.store.remove(i)
-                    return f"Have removed {item}"
+                    return "Have removed {}".format(item)
             return "We don't have such kind of item"
     
         # except  IndexError:
         #     print("IndexError\n")
         #     return None
         except Exception as ex:
-            print(f"{ex}\n")
+            print(ex,"\n")
             return None
         
     def __add__(self,other):
@@ -76,7 +76,7 @@ class inventory_informa:
             if choice==1:
                 inventory_informa.store.append([other.item,other.quantity,other.cost,other.price,other.expire])
             elif choice==0:            
-                return "Rewrite the standard style like {self.item}"    
+                return "Rewrite the standard style like {}".format(self.item)    
 
 
             
@@ -102,22 +102,22 @@ class extend_informa(inventory_informa):
                 if quantity>0 and i[2]!=cost: #这里是进货
                     i[2]=(quantity*cost+i[1]*i[2])/(quantity+i[1])
                     i[1]=quantity+i[1]
-                    return ("Suggest to adjust the price."+f"{i[0]} remains {i[1]}")
+                    return "Suggest to adjust the price.{} remains {}".format(i[0], i[1])
                 else:
                     old=i[1]
                     i[1]=quantity+old
-                    return f"{i[0]} remains {i[1]}"
+                    return "{} remains {}".format(i[0], i[1])
         return "No item here"
     def delete(self,item):
         for i in extend_informa.Store[1:]:
             if i[0]==item:
                 extend_informa.Store.remove(i) 
-                return f"Have removed {item}"
+                return "Have removed {}".format(item)
         return "We don't have such kind of item"
 
             
     def __str__(self):
-        return f"{self.item} have {self.quantity} in store. The profit they can make is {self.profit}"
+        return "{} have {} in store. The profit they can make is {}".format(self.item,self.quantity, self.profit)
  
 def rollback2(mylist):
     top3=[]
@@ -133,7 +133,7 @@ def rollback2(mylist):
     # except TypeError:
     #     print("TypeError\n")
     except Exception as ex:
-        print(f"{ex}\n")
+        print(ex,"\n")
     finally:
         top3.sort(key=lambda x: x[1],reverse=True)
         #can't work if  top3[0:3].sort(key=lambda x: x[2],reverse=False) 
@@ -159,7 +159,7 @@ def rollback(mylist):#放外面
         #     print("There is no item in your list of list.\n")
         #     continue
         except Exception as ex:
-            print(f"{ex}\n")
+            print(ex,"\n")
             continue
         try:
             if due<3:
@@ -179,7 +179,7 @@ def rollback(mylist):#放外面
         #     print("The last item of your list is not datetime type.\n")
         #     continue
         except Exception as ex:
-            print(f"{ex}\n")
+            print(ex,"\n")
             continue
             
     sale["50%"]=sale_50

@@ -28,29 +28,6 @@ def eliminate(Transaction_class,member_class):
     # for row in cursor:
     #     if (dt.today()-row[1]).day>=31:
     #         points=0
-<<<<<<< HEAD
-    expired_member=[]
-    cnx=sqlite3.connect("Supermarket.db")
-    cursor=cnx.cursor()
-    cursor.execute("select customer_id,transaction_time from transactions")
-    for row in cursor:
-        if (dt.today()-row[1]).day>=31:
-            points=0
-            expired_member.append(row[0])
-            # return f"It's so sorry that there are {row[0]} credits expiring from your account"
-        else:
-            points=row[1]
-            # return f"There are {row[0]} credits in your account. Enjoy your shopping in Superman!"
-    cursor.commit()
-    cursor.close()
-    ##update
-    cnx=sqlite3.connect("Supermarket.db")
-    cursor=cnx.cursor()
-    cursor.execute("update members set credits=0 when id in ?", (expired_member))
-    cursor.commit()
-    cursor.close()
-    return expired_member
-=======
     #         expired_member.append(row[0])
     #         # return f"It's so sorry that there are {row[0]} credits expiring from your account"
     #     else:
@@ -65,7 +42,6 @@ def eliminate(Transaction_class,member_class):
     # cursor.commit()
     # cursor.close()
     # return expired_member
->>>>>>> 42a97b07ad960b303f1815fadb1a98f1c046e37d
 def promotion(member_class):#账户充钱
     if member_class.account_credits>100000:
         member_class.deposit=round(member_class.deposit*1.01,1)
